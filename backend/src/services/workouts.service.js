@@ -2,7 +2,7 @@ const { Workout } = require('../models/workout.model')
 
 async function getMultiple() {
     try {
-        const allWorkouts = await Workout.find();
+        const allWorkouts = await Workout.find().populate('exercises.exercise');
         return allWorkouts;
     } catch (error) {
         console.error("Error getting workouts: ", error);
