@@ -1,26 +1,27 @@
-<div class="container">
-    <div class="card mt-4 position-relative" (mouseenter)="hoverTrash = true" (mouseleave)="hoverTrash = false">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title">{{ workout.name }}</h5>
-            <span *ngIf="hoverTrash" class="trash-can" (click)="deleteWorkout()" style="cursor: pointer;">
-                <i class="bi bi-trash3" style="color: red;"></i>
-            </span>
+<div class="card mt-4 position-relative" (mouseenter)="hover = true" (mouseleave)="hover = false" style="cursor: pointer;">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title">{{ workout.name }}</h5>
+        <div class="dropdown" *ngIf="hover">
+            <button class="btn btn-link dropdown-toggle no-caret" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button class="dropdown-item" type="button" (click)="startWorkout()">Start Workout</button>
+                <button class="dropdown-item" type="button">Edit Template</button>
+                <button class="dropdown-item" type="button" (click)="deleteWorkout()">Delete Template</button>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <div *ngFor="let exercise of workout.exercises" class="mb-4">
-                        <h6>{{ exercise.exercise.name }}</h6>
-                        <ul class="list-group">
-                            <li class="list-group-item" *ngFor="let set of exercise.sets">
-                                <span>Reps: {{ set.reps }}</span>
-                                <span class="ml-3">Weight: {{ set.weight }}</span>
-                                <span class="ml-3">Warmup: {{ set.warmup ? 'Yes' : 'No' }}</span>
-                            </li>
-                        </ul>
-                    </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <div *ngFor="let exercise of workout.exercises" class="mb-4">
+                    <h6>{{getExerciseName(exercise.exercise)}}</h6>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<app-active-workout-modal />

@@ -1,0 +1,44 @@
+<div class="container">
+    <form [formGroup]="activeWorkoutForm">
+        <div formArrayName="exercises">
+            <div *ngFor="let exercise of exercises.controls; let i = index;" [formGroupName]="i">
+                <h4>{{exercise.get('name')?.value}}</h4>
+                <div formArrayName="sets">
+                    <!-- Header row -->
+                    <div class="row mb-2">
+                        <div class="col text-center">
+                            <strong>Set</strong>
+                        </div>
+                        <div class="col text-center">
+                            <strong>Reps</strong>
+                        </div>
+                        <div class="col text-center">
+                            <strong>Weight</strong>
+                        </div>
+                        <div class="col text-center">
+                            <strong>Completed</strong>
+                        </div>
+                    </div>
+                    <!-- Input rows -->
+                    <div *ngFor="let set of getSetControls(exercise); let j = index;" [formGroupName]="j"
+                        class="row mb-2">
+                        <div class="col text-center">
+                            <p>{{j + 1}}</p>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" formControlName="weight"
+                                placeholder="{{set.get('weight')?.value}}" />
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" formControlName="reps"
+                                placeholder="{{set.get('reps')?.value}}" />
+                        </div>
+                        <div class="col text-center">
+                            <input type="checkbox" class="form-check-input checkbox-custom" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

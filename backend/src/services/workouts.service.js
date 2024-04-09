@@ -12,7 +12,7 @@ async function getMultiple() {
 
 async function getOneById(workoutId) {
     try {
-        const workout = await Workout.findById(workoutId);
+        const workout = await Workout.findById(workoutId).populate('exercises.exercise');
         return workout;
     } catch (error) {
         console.error("Error getting workout by ID: ", error);
@@ -33,7 +33,7 @@ async function getOneByName(workoutName) {
 async function create(workoutData) {
     try {
         const createdWorkout = await Workout.create(workoutData);
-        return createdWorkout;
+        return createdWorkout.populate('exercises.exercise');
     } catch (error) {
         console.error("Error creating workout: ", error);
         throw error;
