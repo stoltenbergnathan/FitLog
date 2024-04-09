@@ -38,7 +38,19 @@ const WorkoutSchema = new mongoose.Schema(
     }
 );
 
+const WorkoutInstanceSchema = new mongoose.Schema(
+    {
+        template: { type: mongoose.Schema.Types.ObjectId, ref: "Workout", required: true},
+        completedExercises: [TrackedExerciseSchema],
+        timeTaken: { type: String, required: true}
+    },
+    {
+        timestamps: true
+    }
+);
+
 const Workout = mongoose.model('Workout', WorkoutSchema);
 const Exercise = mongoose.model('Exercise', ExerciseSchema);
+const WorkoutInstance = mongoose.model('WorkoutInstance', WorkoutInstanceSchema);
 
-module.exports = { Workout, Exercise };
+module.exports = { Workout, Exercise, WorkoutInstance };
