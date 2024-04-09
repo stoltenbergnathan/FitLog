@@ -17,6 +17,7 @@ export interface ExerciseTemplate {
 export interface WorkoutTemplate {
     _id?: string;
     name: string;
+    template: boolean;
     exercises: ExerciseTemplate[];
 }
 
@@ -24,6 +25,7 @@ export function jsonToWorkout(workoutData: any): WorkoutTemplate {
     const workout: WorkoutTemplate = {
         _id: workoutData._id,
         name: workoutData.name,
+        template: workoutData.template,
         exercises: workoutData.exercises.map((exerciseData: any) => {
             const exercise: ExerciseTemplate = {
                 exercise: exerciseData.exercise,

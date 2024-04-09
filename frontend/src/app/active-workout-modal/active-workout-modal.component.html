@@ -1,0 +1,27 @@
+<div *ngIf="selectedWorkout" class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isOpen}" [style.display]="isOpen ? 'block' : 'none'">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{this.time}}</h5>
+                <app-stopwatch [isOpen]="isOpen" [isRunning]="stopWatchRunning" (timeChange)="this.time = $event" />
+                <div style="cursor: pointer;" (click)="stopWatchRunning = true">
+                    <i *ngIf="!stopWatchRunning" class="bi bi-play-fill" style="color: green;"></i>
+                </div>
+                <div style="cursor: pointer;" (click)="stopWatchRunning = false">
+                    <i *ngIf="stopWatchRunning" class="bi bi-pause-fill" style="color: red;"></i>
+                </div>
+                <h5 class="modal-title">{{this.selectedWorkout.name}}</h5>
+                <button type="button" class="close" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <app-active-workout [workout]="this.selectedWorkout" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="submitWorkout()">Finish Workout</button>
+                <button type="button" class="btn btn-danger" (click)="closeModal()">Cancel Workout</button>
+            </div>
+        </div>
+    </div>
+</div>

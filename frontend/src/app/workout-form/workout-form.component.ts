@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 
 import { WorkoutTemplate, Set, ExerciseTemplate, Exercise, jsonToExercise } from '../shared/workout.model';
@@ -12,7 +12,7 @@ import { ExerciseService } from '../exercise.service';
   templateUrl: './workout-form.component.html',
   styleUrl: './workout-form.component.css'
 })
-export class WorkoutFormComponent {
+export class WorkoutFormComponent implements OnInit {
   @Output() addWorkout = new EventEmitter<WorkoutTemplate>();
   workoutForm!: FormGroup;
   availableExercises: Exercise[] = [];
@@ -83,6 +83,7 @@ submitForm(): void {
     if (this.workoutForm.valid) {
       const workoutData: WorkoutTemplate = {
         name: this.workoutName.value,
+        template: true,
         exercises: this.exercises.value.map((exercise: any) => {
           const mappedExercise: ExerciseTemplate = {
             exercise: {
