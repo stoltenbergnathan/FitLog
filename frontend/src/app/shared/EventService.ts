@@ -8,7 +8,7 @@ class EventService {
     }
 
     listen(eventName: string, callback: (event: any) => void) {
-        this.subject.asObservable().subscribe((nextObj: any) => {
+        return this.subject.asObservable().subscribe((nextObj: any) => {
             if(eventName === nextObj.eventName) {
                 callback(nextObj.payload);
             }

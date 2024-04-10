@@ -30,7 +30,6 @@ const TrackedExerciseSchema = new mongoose.Schema(
 const WorkoutSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
-        template: { type: Boolean, required: true },
         exercises: [TrackedExerciseSchema]
     },
     {

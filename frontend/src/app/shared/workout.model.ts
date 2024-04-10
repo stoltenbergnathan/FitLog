@@ -1,7 +1,6 @@
 export interface Set {
     reps: number;
     weight: number;
-    warmup: boolean;
 }
 
 export interface Exercise {
@@ -17,15 +16,20 @@ export interface ExerciseTemplate {
 export interface WorkoutTemplate {
     _id?: string;
     name: string;
-    template: boolean;
     exercises: ExerciseTemplate[];
+}
+
+export interface WorkoutInstance {
+    _id?: string;
+    template: WorkoutTemplate;
+    completedExercises: ExerciseTemplate[]
+    timeTaken: string
 }
 
 export function jsonToWorkout(workoutData: any): WorkoutTemplate {
     const workout: WorkoutTemplate = {
         _id: workoutData._id,
         name: workoutData.name,
-        template: workoutData.template,
         exercises: workoutData.exercises.map((exerciseData: any) => {
             const exercise: ExerciseTemplate = {
                 exercise: exerciseData.exercise,
@@ -33,7 +37,6 @@ export function jsonToWorkout(workoutData: any): WorkoutTemplate {
                     const set: Set = {
                         reps: setData.reps,
                         weight: setData.weight,
-                        warmup: setData.warmup
                     };
                     return set;
                 })
@@ -42,6 +45,28 @@ export function jsonToWorkout(workoutData: any): WorkoutTemplate {
         })
     };
     return workout;
+}
+
+export function jsonToWorkoutInstance(workoutInstanceData: any): WorkoutInstance {
+    const workoutInstance: WorkoutInstance = {
+        _id: workoutInstanceData._id,
+        template: jsonToWorkout(workoutInstanceData.template),
+        completedExercises: workoutInstanceData.completedExercises.map((exerciseData: any) => {
+            const exercise: ExerciseTemplate = {
+                exercise: exerciseData.exercise,
+                sets: exerciseData.sets.map((setData: any) => {
+                    const set: Set = {
+                        reps: setData.reps,
+                        weight: setData.weight,
+                    };
+                    return set;
+                })
+            };
+            return exercise
+        }),
+        timeTaken: workoutInstanceData.timeTaken
+    }
+    return workoutInstance;
 }
 
 export function jsonToExercise(exerciseData: any): Exercise {

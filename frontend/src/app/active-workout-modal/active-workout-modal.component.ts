@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { StopwatchComponent } from '../stopwatch/stopwatch.component';
 import { WorkoutTemplate } from '../shared/workout.model';
 import { ActiveWorkoutComponent } from '../active-workout/active-workout.component';
+import events from '../shared/EventService';
 
 @Component({
   selector: 'app-active-workout-modal',
@@ -31,6 +32,7 @@ export class ActiveWorkoutModalComponent {
   }
 
   submitWorkout() {
+    events.emit("completeWorkout", this.time);
     this.closeModal();
   }
 }
