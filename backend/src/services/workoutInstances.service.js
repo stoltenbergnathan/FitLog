@@ -15,9 +15,7 @@ async function getMultiple() {
 async function create(workoutInstanceData) {
     try {
         const createdWorkoutInstance = await WorkoutInstance.create(workoutInstanceData);
-        return createdWorkoutInstance            
-            .populate('completedExercises.exercise')
-            .populate('template');
+        return createdWorkoutInstance;
     } catch (error) {
         console.error("Error creating workout instance: ", error);
         throw error;

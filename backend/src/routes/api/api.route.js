@@ -8,6 +8,6 @@ const workoutInstancesRouter = require('./workoutInstances.route');
 
 router.use('/workouts', workoutsRouter);
 router.use('/exercises', exercisesRouter);
-router.use('workoutInstancs', workoutInstancesRouter);
+router.use('/workoutInstances', workoutInstancesRouter);
 
 module.exports = router;

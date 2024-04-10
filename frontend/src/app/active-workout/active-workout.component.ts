@@ -1,8 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ExerciseTemplate, Set, WorkoutInstance, WorkoutTemplate } from '../shared/workout.model';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import events from '../shared/EventService';
+import { WorkoutInstanceService } from '../workout-instance.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-active-workout',
@@ -11,15 +13,14 @@ import events from '../shared/EventService';
   templateUrl: './active-workout.component.html',
   styleUrl: './active-workout.component.css'
 })
-export class ActiveWorkoutComponent implements OnInit{
+export class ActiveWorkoutComponent implements OnInit, OnDestroy {
   @Input() workout!: WorkoutTemplate;
   activeWorkoutForm!: FormGroup;
-
   exerciseIdMap: { [name: string]: string | undefined } = {};
+  private completeWorkoutSubscription: Subscription | undefined;
 
-  constructor(private formBuilder: FormBuilder) {
-    events.listen("completeWorkout", (time) => this.submitWorkout(time));
-  }
+
+  constructor(private formBuilder: FormBuilder, private workoutInstanceService: WorkoutInstanceService) { }
 
   ngOnInit(): void {
     this.activeWorkoutForm = this.formBuilder.group({
@@ -27,6 +28,14 @@ export class ActiveWorkoutComponent implements OnInit{
         this.workout.exercises.map((exerciseData) => this.buildExerciseForm(exerciseData))
       )
     });
+
+    this.completeWorkoutSubscription = events.listen("completeWorkout", (time) => this.submitWorkout(time));
+  }
+
+  ngOnDestroy(): void {
+    if (this.completeWorkoutSubscription) {
+      this.completeWorkoutSubscription.unsubscribe();
+    }
   }
 
   private buildExerciseForm(exerciseData: ExerciseTemplate): FormGroup {
@@ -57,6 +66,7 @@ export class ActiveWorkoutComponent implements OnInit{
   }
 
   submitWorkout(time: string) {
+    debugger;
     if (!this.activeWorkoutForm.valid) {
       return;
     }
@@ -88,6 +98,6 @@ export class ActiveWorkoutComponent implements OnInit{
       completedExercises: completedExercises
     }
 
-    console.log(finishedWorkout);
+    this.workoutInstanceService.addWorkoutInstance(finishedWorkout).subscribe();
   }
 }
