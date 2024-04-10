@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ExerciseTemplate, Set, WorkoutTemplate } from '../shared/workout.model';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ExerciseTemplate, Set, WorkoutInstance, WorkoutTemplate } from '../shared/workout.model';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
+import events from '../shared/EventService';
 
 @Component({
   selector: 'app-active-workout',
@@ -14,7 +15,11 @@ export class ActiveWorkoutComponent implements OnInit{
   @Input() workout!: WorkoutTemplate;
   activeWorkoutForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  exerciseIdMap: { [name: string]: string | undefined } = {};
+
+  constructor(private formBuilder: FormBuilder) {
+    events.listen("completeWorkout", (time) => this.submitWorkout(time));
+  }
 
   ngOnInit(): void {
     this.activeWorkoutForm = this.formBuilder.group({
@@ -25,6 +30,8 @@ export class ActiveWorkoutComponent implements OnInit{
   }
 
   private buildExerciseForm(exerciseData: ExerciseTemplate): FormGroup {
+    this.exerciseIdMap[exerciseData.exercise.name] = exerciseData.exercise._id;
+
     return this.formBuilder.group({
       name: [exerciseData.exercise.name],
       sets: this.formBuilder.array(
@@ -36,7 +43,8 @@ export class ActiveWorkoutComponent implements OnInit{
   private buildSetForm(setData: Set): FormGroup {
     return this.formBuilder.group({
       weight: [setData.weight],
-      reps: [setData.reps]
+      reps: [setData.reps],
+      completed: [false]
     });
   }
 
@@ -46,5 +54,40 @@ export class ActiveWorkoutComponent implements OnInit{
 
   getSetControls(exerciseControl: AbstractControl): AbstractControl[] {
     return (exerciseControl.get('sets') as FormArray).controls;
+  }
+
+  submitWorkout(time: string) {
+    if (!this.activeWorkoutForm.valid) {
+      return;
+    }
+
+    const completedExercises: ExerciseTemplate[] = [];
+    this.exercises.controls.forEach((exerciseControl: AbstractControl) => {
+      const sets = (exerciseControl.get('sets') as FormArray).controls;
+      const completedSets = sets.filter(setControl => setControl.get('completed')?.value);
+
+      if (completedSets.length > 0) {
+        const exercise = exerciseControl.value;
+        const mappedExercise: ExerciseTemplate = {
+          exercise: {
+            _id: this.exerciseIdMap[exercise.name],
+            name: exercise.name
+          },
+          sets: completedSets.map(setControl => ({
+            reps: setControl.get('reps')?.value,
+            weight: setControl.get('weight')?.value
+          }))
+        };
+        completedExercises.push(mappedExercise)
+      }
+    });
+
+    const finishedWorkout: WorkoutInstance = {
+      template: this.workout,
+      timeTaken: time,
+      completedExercises: completedExercises
+    }
+
+    console.log(finishedWorkout);
   }
 }

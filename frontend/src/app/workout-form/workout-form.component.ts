@@ -49,8 +49,7 @@ export class WorkoutFormComponent implements OnInit {
     return this.formBuilder.group(
       {
         reps: [reps ? reps : ''],
-        weight: [weight ? weight : ''],
-        warmup: [false]
+        weight: [weight ? weight : '']
       }
     )
   }
@@ -79,11 +78,10 @@ export class WorkoutFormComponent implements OnInit {
     this.exercises.push(this.createExercise(exercise))
   }
 
-submitForm(): void {
+  submitForm(): void {
     if (this.workoutForm.valid) {
       const workoutData: WorkoutTemplate = {
         name: this.workoutName.value,
-        template: true,
         exercises: this.exercises.value.map((exercise: any) => {
           const mappedExercise: ExerciseTemplate = {
             exercise: {
@@ -94,7 +92,6 @@ submitForm(): void {
               const mappedSet: Set = {
                 reps: set.reps,
                 weight: set.weight,
-                warmup: set.warmup
               };
               return mappedSet;
             })
