@@ -66,7 +66,6 @@ export class ActiveWorkoutComponent implements OnInit, OnDestroy {
   }
 
   submitWorkout(time: string) {
-    debugger;
     if (!this.activeWorkoutForm.valid) {
       return;
     }
