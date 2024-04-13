@@ -18,6 +18,6 @@ export class WorkoutInstanceService {
   }
 
   removeWorkoutInstace(data: WorkoutInstance) {
-    return this.http.delete('http://localhost:3000/api/workoutInstaces/' + data._id);
+    return this.http.delete('http://localhost:3000/api/workoutInstances/' + data._id);
   }
 }

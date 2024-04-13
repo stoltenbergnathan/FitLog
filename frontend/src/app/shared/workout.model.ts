@@ -24,6 +24,7 @@ export interface WorkoutInstance {
     template: WorkoutTemplate;
     completedExercises: ExerciseTemplate[]
     timeTaken: string
+    createdAt?: Date
 }
 
 export function jsonToWorkout(workoutData: any): WorkoutTemplate {
@@ -64,7 +65,8 @@ export function jsonToWorkoutInstance(workoutInstanceData: any): WorkoutInstance
             };
             return exercise
         }),
-        timeTaken: workoutInstanceData.timeTaken
+        timeTaken: workoutInstanceData.timeTaken,
+        createdAt: new Date(workoutInstanceData.createdAt)
     }
     return workoutInstance;
 }
