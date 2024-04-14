@@ -36,7 +36,7 @@
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exerciseModal">
                 Add Exercises
             </button>
-            <button class="btn btn-primary" (click)="$event.preventDefault(); submitForm()">Submit</button>
+            <button class="btn btn-primary" (click)="$event.preventDefault(); submitForm()">{{edit ? "Edit" : "Submit" }}</button>
         </div>
     </form>
 

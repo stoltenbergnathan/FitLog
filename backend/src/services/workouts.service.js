@@ -40,10 +40,10 @@ async function create(workoutData) {
     }
 }
 
-async function update(workoutId, workoutData) {
+async function update(workoutData) {
     try {
-        const updatedWorkout = await Workout.findByIdAndUpdate(workoutId, workoutData, { new: true });
-        return updatedWorkout;
+        const updatedWorkout = await Workout.findByIdAndUpdate(workoutData._id, workoutData, { new: true });
+        return updatedWorkout.populate('exercises.exercise');
     } catch (error) {
         console.error("Error updating workout: ", error);
         throw error;

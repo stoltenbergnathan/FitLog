@@ -10,11 +10,15 @@ export class WorkoutService {
   constructor(private http: HttpClient) { }
 
   getWorkouts() {
-    return this.http.get('http://localhost:3000/api/workouts/')
+    return this.http.get('http://localhost:3000/api/workouts/');
   }
 
   addWorkout(data: WorkoutTemplate) {
-    return this.http.post('http://localhost:3000/api/workouts/', data)
+    return this.http.post('http://localhost:3000/api/workouts/', data);
+  }
+
+  editWorkout(data: WorkoutTemplate) {
+    return this.http.put('http://localhost:3000/api/workouts/', data);
   }
 
   removeWorkout(data: WorkoutTemplate) {

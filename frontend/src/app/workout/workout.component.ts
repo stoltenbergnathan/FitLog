@@ -16,19 +16,15 @@ export class WorkoutComponent {
   @ViewChild(ActiveWorkoutModalComponent) activeWorkoutModal!: ActiveWorkoutModalComponent;
   hover: boolean = false;
 
-  getExerciseName(exercise: Exercise): string {
-    if (exercise) {
-      return exercise.name;
-    } else {
-      return "Exercise Not Found";
-    }
-  }
-
   deleteWorkout() {
     events.emit('deleteWorkout', this.workout);
   }
 
   startWorkout() {
     this.activeWorkoutModal.openModalWithWorkout(this.workout);
+  }
+
+  editWorkout() {
+    events.emit('editWorkout', this.workout);
   }
 }

@@ -38,7 +38,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        res.json(await workouts.update(req.params.id, req.body))
+        res.json(await workouts.update(req.body))
     } catch (err) {
         console.error(err)
         next(err)
