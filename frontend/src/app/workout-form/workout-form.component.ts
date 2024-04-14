@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, Ab
 import { WorkoutTemplate, Set, ExerciseTemplate, Exercise, jsonToExercise } from '../shared/workout.model';
 import { ExerciseService } from '../exercise.service';
 
+import events from '../shared/EventService';
+
 @Component({
   selector: 'app-workout-form',
   standalone: true,
@@ -14,11 +16,20 @@ import { ExerciseService } from '../exercise.service';
 })
 export class WorkoutFormComponent implements OnInit {
   @Output() addWorkout = new EventEmitter<WorkoutTemplate>();
+  @Output() editWorkout = new EventEmitter<WorkoutTemplate>();
   workoutForm!: FormGroup;
+  edit: boolean = false;
+  trackedId: string = "";
   availableExercises: Exercise[] = [];
   selectedExercises: Exercise[] = [];
 
-  constructor(private formBuilder: FormBuilder, private exerciseService: ExerciseService) { }
+  constructor(private formBuilder: FormBuilder, private exerciseService: ExerciseService) {
+    events.listen("editWorkout", (data: any) => {
+      this.edit = true;
+      this.trackedId = data._id;
+      this.buildForm(data);
+    });
+  }
 
   ngOnInit() {
     this.workoutForm = this.formBuilder.group({
@@ -33,6 +44,21 @@ export class WorkoutFormComponent implements OnInit {
     );
   }
 
+  buildForm(workout: WorkoutTemplate) {
+    this.workoutForm = this.formBuilder.group({
+      workoutName: [workout.name],
+      exercises: this.formBuilder.array(
+        workout.exercises.map((exerciseData: ExerciseTemplate) => {
+          const exerciseGroup = this.createExercise(exerciseData.exercise);
+          exerciseData.sets.forEach(set => {
+            (exerciseGroup.get("sets") as FormArray).push(this.createSet(set.reps, set.weight));
+          });
+          return exerciseGroup;
+        })
+      )
+    })
+  }
+
   get workoutName(): FormControl {
     return (this.workoutForm.get('workoutName') as FormControl)
   }
@@ -45,7 +71,7 @@ export class WorkoutFormComponent implements OnInit {
     return (this.exercises.at(exerciseIndex).get('sets') as FormArray)
   }
 
-  createSet(reps?: string, weight?: string): FormGroup {
+  createSet(reps?: number, weight?: number): FormGroup {
     return this.formBuilder.group(
       {
         reps: [reps ? reps : ''],
@@ -69,7 +95,7 @@ export class WorkoutFormComponent implements OnInit {
     return this.formBuilder.group(
       {
         exerciseName: [exercise.name],
-        sets: this.formBuilder.array([this.createSet()])
+        sets: this.formBuilder.array([])
       }
     )
   }
@@ -79,7 +105,10 @@ export class WorkoutFormComponent implements OnInit {
   }
 
   submitForm(): void {
-    if (this.workoutForm.valid) {
+    if (!this.workoutForm.valid)
+      return;
+    
+    if (!this.edit) {
       const workoutData: WorkoutTemplate = {
         name: this.workoutName.value,
         exercises: this.exercises.value.map((exercise: any) => {
@@ -101,10 +130,35 @@ export class WorkoutFormComponent implements OnInit {
       };
 
       this.addWorkout.emit(workoutData);
-    
-      this.workoutForm.reset();
-      this.clearExercises();
+    } else {
+      const workoutData: WorkoutTemplate = {
+        _id: this.trackedId,
+        name: this.workoutName.value,
+        exercises: this.exercises.value.map((exercise: any) => {
+          const mappedExercise: ExerciseTemplate = {
+            exercise: {
+              _id: this.availableExercises.find((e) => e.name === exercise.exerciseName)!._id,
+              name: exercise.exerciseName
+            },
+            sets: exercise.sets.map((set: any) => {
+              const mappedSet: Set = {
+                reps: set.reps,
+                weight: set.weight,
+              };
+              return mappedSet;
+            })
+          };
+          return mappedExercise;
+        })
+      };
+      
+      this.editWorkout.emit(workoutData);
+      this.edit = false;
+      this.trackedId = "";
     }
+  
+    this.workoutForm.reset();
+    this.clearExercises();
   }
 
   clearExercises(): void {

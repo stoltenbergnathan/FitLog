@@ -8,7 +8,7 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <button class="dropdown-item" type="button" (click)="startWorkout()">Start Workout</button>
-                <button class="dropdown-item" type="button">Edit Template</button>
+                <button class="dropdown-item" type="button" (click)="editWorkout()">Edit Template</button>
                 <button class="dropdown-item" type="button" (click)="deleteWorkout()">Delete Template</button>
             </div>
         </div>
@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col">
                 <div *ngFor="let exercise of workout.exercises" class="mb-4">
-                    <h6>{{getExerciseName(exercise.exercise)}}</h6>
+                    <h6>{{exercise.exercise.name}}</h6>
                 </div>
             </div>
         </div>

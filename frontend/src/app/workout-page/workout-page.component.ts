@@ -23,7 +23,7 @@ export class WorkoutPageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.workoutService.getWorkouts().subscribe((data: any) => {
       this.workouts = data.map((workoutData: any) => {
         const workout: WorkoutTemplate = jsonToWorkout(workoutData);
@@ -32,7 +32,19 @@ export class WorkoutPageComponent implements OnInit {
     });
   }
 
-  addWorkout(data: WorkoutTemplate): void {
+  addWorkout(data: WorkoutTemplate) {
     this.workoutService.addWorkout(data).subscribe((workoutData: any) => this.workouts.push(jsonToWorkout(workoutData)));
+  }
+
+  editWorkout(data: WorkoutTemplate) {
+    this.workoutService.editWorkout(data).subscribe((updatedWorkoutJSON: any) => {
+      const updatedWorkout: WorkoutTemplate = jsonToWorkout(updatedWorkoutJSON);
+      const index = this.workouts.findIndex(workout => workout._id === updatedWorkout._id);
+      if (index !== -1) {
+        const updatedWorkouts = [...this.workouts];
+        updatedWorkouts[index] = updatedWorkout;
+        this.workouts = updatedWorkouts;
+      }
+    });
   }
 }
