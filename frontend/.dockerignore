@@ -1,0 +1,17 @@
+# Ignore node_modules since they will be installed inside the Docker container
+node_modules
+
+# Ignore any temporary files or directories
+tmp
+temp
+*.log
+
+# Ignore any build artifacts
+/dist
+
+# Ignore any files or directories generated during development
+.e2e/
+node_modules/
+/dist/
+*.swp
+*.log
