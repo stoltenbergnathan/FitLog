@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="max-height: 75vh; overflow-y: auto;">
     <form [formGroup]="activeWorkoutForm">
         <div formArrayName="exercises">
             <div *ngFor="let exercise of exercises.controls; let i = index;" [formGroupName]="i">
@@ -26,12 +26,12 @@
                             <p>{{j + 1}}</p>
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" formControlName="weight"
-                                placeholder="{{set.get('weight')?.value}}" />
-                        </div>
-                        <div class="col">
                             <input type="text" class="form-control" formControlName="reps"
                                 placeholder="{{set.get('reps')?.value}}" />
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" formControlName="weight"
+                                placeholder="{{set.get('weight')?.value}}" />
                         </div>
                         <div class="col text-center">
                             <input type="checkbox" class="form-check-input checkbox-custom" formControlName="completed"/>
