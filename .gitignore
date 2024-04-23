@@ -1,3 +1,6 @@
+# Docker Compose Volume
+.data/
+
 # Logs
 logs
 *.log
