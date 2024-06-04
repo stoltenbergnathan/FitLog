@@ -10,14 +10,14 @@ export class WorkoutInstanceService {
   constructor(private http: HttpClient) { }
 
   getWorkoutInstances() {
-    return this.http.get('/api/workoutInstances/');
+    return this.http.get('http://localhost:3000/api/workoutInstances/');
   }
 
   addWorkoutInstance(data: WorkoutInstance) {
-    return this.http.post('/api/workoutInstances/', data);
+    return this.http.post('http://localhost:3000/api/workoutInstances/', data);
   }
 
   removeWorkoutInstace(data: WorkoutInstance) {
-    return this.http.delete('/api/workoutInstances/' + data._id);
+    return this.http.delete('http://localhost:3000/api/workoutInstances/' + data._id);
   }
 }
