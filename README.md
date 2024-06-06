@@ -1,9 +1,37 @@
-## FitLog
-### Setup
+# FitLog
+## How to run
 1. Clone the repo
-2. Create an .env file in the backend folder with the following key value pairs
+2. Create a `docker-compose.yaml` file in the root directory that looks like so
 ```
-DB_URL=mongodb://DB_USERNAME:DB_PASSWORD@db:27017
+version: '3'
+
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    environment:
+      - DB_URL=
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  db:
+    image: mongo:7
+    volumes:
+      - './.data:/data/db'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME:
+      MONGO_INITDB_ROOT_PASSWORD:
 ```
-3. Replace localhost:3000 in the frontend services with the correct URL if needed #TODO: make this better
-4. Run the docker compose file with `docker compose up` (learn more about docker compose [here](https://docs.docker.com/compose/))
+3. Run with `docker compose up --build`
