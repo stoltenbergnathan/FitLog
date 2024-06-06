@@ -3,9 +3,11 @@ FROM node:20
 
 WORKDIR /app
 
-COPY ./package*.json ./
+COPY backend/package*.json ./
 RUN npm install --only=production
 
-COPY . ./
+COPY backend/. ./
+
+EXPOSE 3000
 
 CMD ["npm", "run", "prod"]

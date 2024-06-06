@@ -1,3 +1,6 @@
+# VSCode files
+.vscode
+
 # Docker Compose Volume
 .data/
 
